@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-manager>
+
+	<dao name="mysql.userDao" class="cn.oyeah.dao.impl.MySQLUserDaoImpl"/>
+	<dao name="mysql.rechargeDao" class="cn.oyeah.dao.impl.MySQLRechargeDaoImpl"/>
+	<dao name="mysql.propPurchaseDao" class="cn.oyeah.dao.impl.MySQLPropPurchaseDaoImpl"/>
+	<dao name="mysql.realStatisticDao" class="cn.oyeah.dao.impl.MySQLRealStatisticDaoImpl"/>
+	<dao name="mysql.userSubscribeDao" class="cn.oyeah.dao.impl.MySQLUserStatisticDaoImpl"/>
+	<dao name="mysql.userRecordQueryDao" class="cn.oyeah.dao.impl.MySQLUserRecordQueryDaoImpl"/>
+	<dao name="mysql.userDataAnalysisDao" class="cn.oyeah.dao.impl.MySQLUserDataAnalysisDaoImpl"/>
+	
+	<dao name="sqlserver.userDao" class="cn.oyeah.dao.impl.SQLServerUserDaoImpl"/>
+	<dao name="sqlserver.rechargeDao" class="cn.oyeah.dao.impl.SQLServerRechargeDaoImpl"/>
+	<dao name="sqlserver.propPurchaseDao" class="cn.oyeah.dao.impl.SQLServerPropPurchaseDaoImpl"/>
+	<dao name="sqlserver.realStatisticDao" class="cn.oyeah.dao.impl.SQLServerRealStatisticDaoImpl"/>
+	<dao name="sqlserver.userSubscribeDao" class="cn.oyeah.dao.impl.SQLServerUserStatisticDaoImpl"/>
+	<dao name="sqlserver.userRecordQueryDao" class="cn.oyeah.dao.impl.SQLServerUserRecordQueryDaoImpl"/>
+	<dao name="sqlserver.userDataAnalysisDao" class="cn.oyeah.dao.impl.SQLServerUserDataAnalysisDaoImpl"/>
+</dao-manager>

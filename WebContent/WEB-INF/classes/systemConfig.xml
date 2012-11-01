@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+	  <!--
+		<db-info>
+			<driver-name>oracle.jdbc.driver.OracleDriver</driver-name>
+			<url>jdbc:oracle:thin:@localhost:1521:drp</url>
+			<user-name>drp1</user-name>
+			<password>drp1</password>
+		</db-info>
+	  -->
+	 
+	  <db-info>
+	  	<database-name>mysql</database-name>
+		<driver-name>com.mysql.jdbc.Driver</driver-name>
+		<url>jdbc:mysql://localhost:3306/itvgame?characterEncoding=GBK</url>
+		<user-name>root</user-name>
+		<password>root</password>
+	  </db-info>
+   <!-- 
+	<db-info>
+		<database-name>sqlserver</database-name>
+		<driver-name>net.sourceforge.jtds.jdbc.Driver</driver-name>
+		<url>jdbc:jtds:sqlserver://192.168.16.30:1433/test;instance=sql2005</url>
+		<user-name>itvgame</user-name>
+		<password>itvgame</password>
+	</db-info>
+ -->
+
+</config>
+
