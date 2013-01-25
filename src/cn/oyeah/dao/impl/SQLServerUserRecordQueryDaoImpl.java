@@ -21,8 +21,8 @@ public class SQLServerUserRecordQueryDaoImpl implements UserRecordQueryDao {
 		sql.append(" select top "+pageSize+" *");
 		sql.append(" from ( ");
 		sql.append("     select row_number()over(order by time desc) as rowNumber ,time,amount, propName ");
-		sql.append("     from [PurchaseRecord] where userId="+userId);
-		sql.append("  ) tb2");
+		sql.append("     from [PurchaseRecord] where userId='"+userId);
+		sql.append("'  ) tb2");
 		sql.append(" where  rowNumber > "+pageSize+" * ("+pageNo+"-1)");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -67,8 +67,8 @@ public class SQLServerUserRecordQueryDaoImpl implements UserRecordQueryDao {
 		sql.append(" select top "+pageSize+" *");
 		sql.append(" from ( ");
 		sql.append("     select row_number()over(order by time desc) as rowNumber ,time,amount, productName");
-		sql.append("     from [SubscribeRecord] where userId="+userId);
-		sql.append("  ) tb2");
+		sql.append("     from [SubscribeRecord] where userId='"+userId);
+		sql.append("'  ) tb2");
 		sql.append(" where  rowNumber > "+pageSize+" * ("+pageNo+"-1)");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
