@@ -21,7 +21,7 @@
 	<db-info>
 		<database-name>sqlserver</database-name>
 		<driver-name>net.sourceforge.jtds.jdbc.Driver</driver-name>
-		<url>jdbc:jtds:sqlserver://192.168.16.30:1433/itvgame;instance=sql2005</url>
+		<url>jdbc:jtds:sqlserver://192.168.16.30:1433/test;instance=sql2005</url>
 		<user-name>itvgame</user-name>
 		<password>itvgame</password>
 	</db-info>
