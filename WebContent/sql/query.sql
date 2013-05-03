@@ -39,3 +39,12 @@ select date(time) as t, sum(amount) as a
 from PurchaseRecord
 where userId=113001
 group by date(time);
+
+select accountId, a
+from(
+	select accountId, sum(goldCoin) as a from [Authorization] group by accountId 
+)tb
+
+where a>0
+
+

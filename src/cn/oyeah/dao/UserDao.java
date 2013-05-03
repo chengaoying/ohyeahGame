@@ -52,10 +52,13 @@ public interface UserDao {
 	 */
 	public Map<String, Integer> queryCoin();
 	
-	public List<String> getTableRows();
+	public List<Integer> getTableRows();
 	
-	public Map<String, String> getTableColumns();
+	public List<String> getTableColumns();
 	
 	public int queryAllAmount();
 	
+	public String getUserIdByAccountId(int accountId);
+	
+	public String getGameNameByProductId(int productId);
 }

@@ -9,7 +9,7 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 	Map<String, Integer> map = (Map<String, Integer>)request.getAttribute("map");
-	List<String> rows = (List<String>)request.getAttribute("rows");
+	Map<String, Integer> rows = (Map<String, Integer>)request.getAttribute("rows");
 	Map<String, String> columns = (Map<String, String>)request.getAttribute("columns");
 	int amount = Integer.parseInt(String.valueOf(request.getAttribute("amount")));
 %>
@@ -29,7 +29,7 @@
 		border="0" cellpadding="3" cellspacing="1" width="98%">
 		<tbody>
 			<tr bgcolor="#879999">
-				<td colspan="9" height="24"><font color="#FFFFFF">&nbsp;<strong>用户余额查询</strong></font></td>
+				<td colspan="9" height="24"><font color="#FFFFFF">&nbsp;<strong>用户余额查询，单位：游戏币(0.1元)</strong></font></td>
 			</tr>
 
 			<tr bgcolor="#f5f5f5">
@@ -46,8 +46,10 @@
 			</tr>
 
 			<% 
-				for(Iterator it = rows.iterator();it.hasNext();){
-					String userId = (String)it.next();     
+				for(Iterator it = rows.entrySet().iterator();it.hasNext();){
+					Map.Entry entry = (Map.Entry)it.next();
+					String userId = (String)entry.getKey();
+					int accountId = (Integer)entry.getValue();
 			%>
 			<tr bgcolor="#f5f5f5">
 				<td height="24" align="center" valign="middle"><%=userId %></td>
@@ -57,7 +59,7 @@
 						Map.Entry entry2 = (Map.Entry)it2.next();    
 				    	String productId = (String)entry2.getKey();     
 				%>
-				<td align="center" valign="middle"><%=map.get(userId+productId)==null?0:map.get(userId+productId)  %></td>
+				<td align="center" valign="middle"><%=map.get(accountId+productId)==null?0:map.get(accountId+productId)  %></td>
 				<% 
 					}
 				%>

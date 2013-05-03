@@ -69,18 +69,28 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List<String> getTableRows() {
+	public List<Integer> getTableRows() {
 		return userDao.getTableRows();
 	}
 
 	@Override
-	public Map<String, String> getTableColumns() {
+	public List<String> getTableColumns() {
 		return userDao.getTableColumns();
 	}
 
 	@Override
 	public int queryAllAmount() {
 		return userDao.queryAllAmount();
+	}
+
+	@Override
+	public String getUserIdByAccountId(int accountId) {
+		return userDao.getUserIdByAccountId(accountId);
+	}
+
+	@Override
+	public String getGameNameByProductId(int productId) {
+		return userDao.getGameNameByProductId(productId);
 	}
 
 }

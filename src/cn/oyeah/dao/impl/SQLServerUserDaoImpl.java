@@ -226,7 +226,7 @@ public class SQLServerUserDaoImpl implements UserDao {
 
 	@Override
 	public Map<String, Integer> queryCoin() {
-		String sql = "select accountId, productId, goldCoin from [Authorization]";
+		String sql = "select accountId, productId, goldCoin from [Authorization] where goldCoin>0";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -239,7 +239,7 @@ public class SQLServerUserDaoImpl implements UserDao {
 			while (rs.next()){
 				//System.out.println(rs.getInt("accountId") + rs.getString("productId"));
 				//System.out.println(rs.getInt("goldCoin"));
-				subMap.put(getUserIdByAccountId(rs.getInt("accountId"), conn) + rs.getString("productId"), rs.getInt("goldCoin"));
+				subMap.put(rs.getInt("accountId") + rs.getString("productId"), rs.getInt("goldCoin"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -252,20 +252,24 @@ public class SQLServerUserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<String> getTableRows() {
-		String sql = "select distinct accountId from [Authorization]";
+	public List<Integer> getTableRows() {
+		String sql = "select accountId, a"+
+				" from( "+
+					" select accountId, sum(goldCoin) as a from [Authorization] group by accountId "+
+					" )tb"+
+				" where a>0";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<String> list = null;
+		List<Integer> list = null;
 		try {
 			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			list = new ArrayList<String>();
+			list = new ArrayList<Integer>();
 			while (rs.next()){
 				//System.out.println("accountId:"+rs.getInt("accountId"));
-				list.add(getUserIdByAccountId(rs.getInt("accountId"), conn));
+				list.add(rs.getInt("accountId"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -278,20 +282,20 @@ public class SQLServerUserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Map<String, String> getTableColumns() {
+	public List<String> getTableColumns() {
 		String sql = "select distinct productId from [Authorization]";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Map<String,String> subMap = null;
+		List<String> subMap = null;
 		try {
 			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			subMap = new HashMap<String,String>();
+			subMap = new ArrayList<String>();
 			while (rs.next()){
-				String name = getGameNameByProductId(conn, Integer.parseInt(rs.getString("productId")));
-				subMap.put(rs.getString("productId"), name);
+				//String name = getGameNameByProductId(conn, Integer.parseInt(rs.getString("productId")));
+				subMap.add(rs.getString("productId"));
 				//System.out.println("productId:"+rs.getString("productId")+"--productName:"+name);
 			}
 		}catch(Exception e) {
@@ -304,35 +308,52 @@ public class SQLServerUserDaoImpl implements UserDao {
 		return subMap;
 	}
 
-	public String getUserIdByAccountId(int accountId, Connection conn) throws Exception{
-		String sql = "select userId from [Account] where accountId="+accountId;
-		conn = ConnectionManager.getConnection();
-		PreparedStatement pstmt = conn.prepareStatement(sql);
-		ResultSet rs = pstmt.executeQuery();
-		while (rs.next()){
-			return rs.getString("userId");
-		}
-		return null;
-	}
-	
-	private String getGameNameByProductId(Connection conn, int id) 
-			throws SQLException {
-				String productName = "";
-				String sql = "select productName from [ProductDetail] where productId = ?";
-				PreparedStatement pstmt = null;
-				ResultSet rs = null;
-				try {
-					pstmt = conn.prepareStatement(sql);
-					pstmt.setInt(1, id);
-					rs = pstmt.executeQuery();
-					rs.next();
-					productName = rs.getString("productName");
-				}finally {
-					ConnectionManager.close(rs);
-					ConnectionManager.close(pstmt);
-				}
-				return productName;
+	public String getUserIdByAccountId(int accountId){
+		String sql = "select userId from [Account] where accountId="
+				+ accountId;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String userId = "";
+		try {
+			conn = ConnectionManager.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			//pstmt.setInt(1, accountId);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				userId = rs.getString("userId");
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+		}
+		return userId;
+	}
+
+	public String getGameNameByProductId(int id){
+		String productName = "";
+		String sql = "select productName from [ProductDetail] where productId = ?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionManager.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				productName = rs.getString("productName");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+		}
+		return productName;
+	}
 
 	@Override
 	public int queryAllAmount() {
