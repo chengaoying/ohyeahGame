@@ -1,6 +1,9 @@
 package cn.oyeah.service.impl;
 
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 
 import cn.oyeah.dao.UserDao;
@@ -58,6 +61,26 @@ public class UserServiceImpl implements IUserService {
 	public User loginValidate(String userName) {
 		User user = userDao.loadUserByName(userName);	
 		return user;
+	}
+
+	@Override
+	public Map<String, Integer> queryCoin() {
+		return userDao.queryCoin();
+	}
+
+	@Override
+	public List<String> getTableRows() {
+		return userDao.getTableRows();
+	}
+
+	@Override
+	public Map<String, String> getTableColumns() {
+		return userDao.getTableColumns();
+	}
+
+	@Override
+	public int queryAllAmount() {
+		return userDao.queryAllAmount();
 	}
 
 }

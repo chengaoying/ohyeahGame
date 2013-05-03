@@ -16,18 +16,18 @@ public class UserDataServiceImpl implements IUserDataService {
 		userDataAnalysisDao = (UserDataAnalysisDao)DaoManager.getDao("userDataAnalysisDao");
 	}
 
-	public PageModel<UserDataAnalysis> queryAllUserData(String startTime,
+	public PageModel<UserDataAnalysis> queryAllUserData(int providerId,String productIds,String startTime,
 			String endTime, int pageNo, int pageSize) {
-		return userDataAnalysisDao.queryAllUserData(startTime, endTime, pageNo, pageSize);
+		return userDataAnalysisDao.queryAllUserData(providerId,productIds,startTime, endTime, pageNo, pageSize);
 	}
 
-	public PageModel<UserDataAnalysis> querySingleUserData(String startTime,
+	public PageModel<UserDataAnalysis> querySingleUserData(int providerId,String productIds,String startTime,
 			String endTime, int pageNo, int pageSize, int productId) {
-		return userDataAnalysisDao.querySingleUserData(startTime, endTime, pageNo, pageSize, productId);
+		return userDataAnalysisDao.querySingleUserData(providerId,productIds,startTime, endTime, pageNo, pageSize, productId);
 	}
 
-	public List<Product> queryAllProduct() {
-		return userDataAnalysisDao.queryAllProduct();
+	public List<Product> queryAllProduct(int providerId) {
+		return userDataAnalysisDao.queryAllProduct(providerId);
 	}
 
 }

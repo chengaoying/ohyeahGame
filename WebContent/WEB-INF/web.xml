@@ -138,13 +138,22 @@
      <url-pattern>/servlet/UserRecordServlet</url-pattern>
   </servlet-mapping>
   
-       <servlet>
+  <servlet>
   <servlet-name>UserDataServlet</servlet-name>
      <servlet-class>cn.oyeah.servlet.UserDataServlet</servlet-class>
   </servlet>
   <servlet-mapping>
      <servlet-name>UserDataServlet</servlet-name>
      <url-pattern>/servlet/UserDataServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+ 	 <servlet-name>QueryCoin</servlet-name>
+     <servlet-class>cn.oyeah.servlet.QueryUserCoin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+     <servlet-name>QueryCoin</servlet-name>
+     <url-pattern>/servlet/queryCoin</url-pattern>
   </servlet-mapping>
 
 </web-app>

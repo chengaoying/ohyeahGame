@@ -21,7 +21,7 @@ public class SessionFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 			HttpServletRequest req = (HttpServletRequest)request;
-			if(req.getSession(false) != null && (String)req.getSession().getAttribute("name") != null) {
+			if(req.getSession(false) != null && req.getSession().getAttribute("user") != null) {
 				chain.doFilter(request, response);
 			} else {
 				HttpServletResponse res = (HttpServletResponse)response;

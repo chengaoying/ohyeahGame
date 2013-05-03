@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.oyeah.domain.DataDictionary;
+import cn.oyeah.domain.ProductProvider;
 import cn.oyeah.req.ConnectionManager;
 
 /**
@@ -61,9 +62,41 @@ public class DataDictionaryManager {
 		}	
 	}
 	
+	public List<ProductProvider> getAllProductProvider(){
+		String sql = "select * from ProductProvider";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ConnectionManager.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			List<ProductProvider> list = new ArrayList<ProductProvider>();
+			while (rs.next()) {
+				ProductProvider productProvider = new ProductProvider();
+				productProvider.setProviderID(Integer.parseInt(rs.getString("providerId")));
+				productProvider.setProviderName(rs.getString("providerName"));
+				productProvider.setType(rs.getString("type"));
+				list.add(productProvider);
+			}
+			return list;
+		} catch (SQLException e){
+			e.printStackTrace();
+			return null;
+		} finally {
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+		}	
+	}
+	
 	public static void main(String[] args){
 		//List<DataDictionary> roles = DataDictionaryManager.getInstance().getDictionaryByName("authority");
 		//System.out.println(roles.size());
+		/*List<ProductProvider> list = DataDictionaryManager.getInstance().getAllProductProvider();
+		for(ProductProvider pp:list){
+			System.out.println(pp.getProviderName());
+			System.out.println(pp.getProviderID());
+		}*/
 	}
 
 }

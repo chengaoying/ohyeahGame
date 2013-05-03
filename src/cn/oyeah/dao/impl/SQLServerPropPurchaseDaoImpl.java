@@ -19,7 +19,7 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * 查询所有已购买的道具并分页
 	 * @param pageNo, pageSize
 	 */
-	public PageModel<PurchaseProp> queryAllPurchaseProp(String startTime, String endTime, int pageNo, int pageSize) {
+	public PageModel<PurchaseProp> queryAllPurchaseProp(int providerId,String productIds, String startTime, String endTime, int pageNo, int pageSize) {
 
 		StringBuffer sqlString = new StringBuffer();
 		sqlString.append(" select top " + pageSize + " * ");
@@ -29,6 +29,9 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 		sqlString.append(" 				select propId,sum(propCount) as pCount ,amount ");
 		sqlString.append("      		from [PurchaseRecord]");
 		sqlString.append("      		where time >= '"+ startTime +"' and time <= '"+ endTime +"'");
+		if(providerId!=1){
+			sqlString.append("				and productId in ("+productIds+")");
+		}
 		sqlString.append("      		group by propId,amount ");
 		sqlString.append("       ) tb");
 		sqlString.append("   ) tb2");
@@ -55,8 +58,8 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 			}
 			pageModel = new PageModel<PurchaseProp>();
 			pageModel.setList(propList);
-			pageModel.setTotalRecords(this.getAllTotalRecords(conn,0, startTime, endTime));
-			pageModel.setTotalPrice(this.queryTotalPrice(conn, 0, startTime, endTime));
+			pageModel.setTotalRecords(this.getAllTotalRecords(conn,0, startTime, endTime, providerId, productIds));
+			pageModel.setTotalPrice(this.queryTotalPrice(conn, 0, startTime, endTime, providerId, productIds));
 			pageModel.setPageSize(pageSize);
 			pageModel.setPageNo(pageNo);
 		}catch(SQLException e) {
@@ -108,8 +111,8 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 				}
 				pageModel = new PageModel<PurchaseProp>();
 				pageModel.setList(propList);
-				pageModel.setTotalRecords(this.getAllTotalRecords(conn,id, startTime, endTime));
-				pageModel.setTotalPrice(this.queryTotalPrice(conn, id, startTime, endTime));
+				pageModel.setTotalRecords(this.getAllTotalRecords(conn,id, startTime, endTime,-1,null));
+				pageModel.setTotalPrice(this.queryTotalPrice(conn, id, startTime, endTime,-1,null));
 				pageModel.setPageSize(pageSize);
 				pageModel.setPageNo(pageNo);
 			}catch(SQLException e) {
@@ -125,8 +128,13 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * 查询所有的游戏产品
 	 * @return List
 	 */
-	public List<Product> queryAllProduct(){
-		String sql = "select * from [Product]";
+	public List<Product> queryAllProduct(int providerId){
+		String sql = "";
+		if(providerId==1){
+			 sql = "select * from [Product]";
+		}else{
+			 sql = "select * from [Product] where providerId="+providerId;
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -163,13 +171,20 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * @param conn,productId,startTime,endTime
 	 * @return
 	 */
-	private int getAllTotalRecords(Connection conn,int productId, String startTime, String endTime) 
+	private int getAllTotalRecords(Connection conn,int productId, String startTime, String endTime, int providerId, String productIds) 
 	throws SQLException {
 		String sql = "";
 		if(productId == 0){
-				 sql = "select propId from [PurchaseRecord] " 
-					+" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime 
-					+ "' group by propId";
+			if(providerId!=1){
+				sql = "select propId from [PurchaseRecord] " 
+						+" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime
+						+" and productId in ("+productIds+")"
+						+ "' group by propId";
+			}else{
+				sql = "select propId from [PurchaseRecord] " 
+						+" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime
+						+ "' group by propId";
+			}
 		} else {
 			 sql = "select propId from [PurchaseRecord] where productId="+ productId 
 					+" and CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime 
@@ -197,13 +212,19 @@ public class SQLServerPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * @return
 	 * @throws SQLException 
 	 */
-	private long queryTotalPrice(Connection conn, int productId, String startTime, String endTime) 
+	private long queryTotalPrice(Connection conn, int productId, String startTime, String endTime, int providerId, String productIds) 
 	throws SQLException{
 		long totalPrice = 0;
 		String sql = "";
 		if (productId == 0){
-			 sql = "select CONVERT(varchar(100), time, 23), propCount, amount from [PurchaseRecord] "
-				 +" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime + "'";
+			if(providerId!=1){
+				sql = "select CONVERT(varchar(100), time, 23), propCount, amount from [PurchaseRecord] "
+						 +" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime + "'"
+						 +" and productId in ("+productIds+")";
+			}else{
+				sql = "select CONVERT(varchar(100), time, 23), propCount, amount from [PurchaseRecord] "
+						 +" where CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime + "'";
+			}
 		} else {
 			 sql = "select time, propCount, amount from [PurchaseRecord] where productId = " + productId
 			 +" and CONVERT(varchar(100), time, 23) >= '" +startTime+"' and CONVERT(varchar(100), time, 23) <= '" + endTime + "'";

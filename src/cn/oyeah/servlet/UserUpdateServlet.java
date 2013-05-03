@@ -29,12 +29,14 @@ public class UserUpdateServlet extends HttpServlet {
 			throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String name = request.getParameter("name");
+		int providerId = Integer.parseInt(request.getParameter("providerId"));
 		String role = request.getParameter("role");
 		String password = request.getParameter("password");
 		User u = new User();
 		u.setId(id);
 		u.setName(name);
 		u.setPassWord(password);
+		u.setProviderID(providerId);
 		u.setRole(role);
 		if(role.equalsIgnoreCase("admin")){
 			u.setAuthority(3);

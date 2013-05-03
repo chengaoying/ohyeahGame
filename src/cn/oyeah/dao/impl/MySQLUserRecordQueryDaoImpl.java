@@ -15,9 +15,14 @@ import cn.oyeah.util.PageModel;
 
 public class MySQLUserRecordQueryDaoImpl implements UserRecordQueryDao {
 
-	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(String userId,
+	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(int providerId, String productIds,String userId,
 			int pageNo, int pageSize) {
-		String sql = "select time, amount, propName from PurchaseRecord where userId=? order by time desc limit ?, ?";
+		String sql = "";
+		if(providerId != 1){
+			sql = "select time, amount, propName from PurchaseRecord where userId=? and productId in ("+productIds+") order by time desc limit ?, ?";
+		}else{
+			sql = "select time, amount, propName from PurchaseRecord where userId=? order by time desc limit ?, ?";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -58,8 +63,13 @@ public class MySQLUserRecordQueryDaoImpl implements UserRecordQueryDao {
 	}
 
 	public PageModel<UserSubscribeRecord> queryUserSubscribeByUserId(
-			String userId, int pageNo, int pageSize) {
-		String sql = "select time, amount, productName from SubscribeRecord where userId=? order by time desc limit ?, ?";
+			int providerId, String productIds,String userId, int pageNo, int pageSize) {
+		String sql = "";
+		if(providerId != 1){
+			sql = "select time, amount, productName from SubscribeRecord where userId=? and productId in("+productIds+")order by time desc limit ?, ?";
+		}else{
+			sql = "select time, amount, productName from SubscribeRecord where userId=? order by time desc limit ?, ?";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

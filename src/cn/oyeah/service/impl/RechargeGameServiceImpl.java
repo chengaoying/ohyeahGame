@@ -16,22 +16,22 @@ public class RechargeGameServiceImpl implements IRechargeGame {
 		rechargeDao = (RechargeDao)DaoManager.getDao("rechargeDao");
 	}
 
-	public Map<String, Integer> getSubscribeDetail(String startTime,
+	public Map<String, Integer> getSubscribeDetail(int providerId, String productIds,String startTime,
 			String endTime) {
-		return rechargeDao.getSubscribeDetail(startTime, endTime);
+		return rechargeDao.getSubscribeDetail(providerId, productIds,startTime, endTime);
 	}
 
-	public Map<String,String> getTableColumns(String startTime, String endTime) {
-		return rechargeDao.getTableColumns(startTime, endTime);
+	public Map<String,String> getTableColumns(int providerId, String productIds,String startTime, String endTime) {
+		return rechargeDao.getTableColumns(providerId, productIds,startTime, endTime);
 	}
 
-	public List<String> getTableRows(String startTime, String endTime) {
-		return rechargeDao.getTableRows(startTime, endTime);
+	public List<String> getTableRows(int providerId, String productIds,String startTime, String endTime) {
+		return rechargeDao.getTableRows(providerId, productIds,startTime, endTime);
 	}
 
-	public Map<String, Integer> getAllSubscribeDetail(String startTime,
+	public Map<String, Integer> getAllSubscribeDetail(int providerId, String productIds,String startTime,
 			String endTime) {
-		return rechargeDao.getAllSubscribeDetail(startTime, endTime);
+		return rechargeDao.getAllSubscribeDetail(providerId, productIds,startTime, endTime);
 	}
 
 

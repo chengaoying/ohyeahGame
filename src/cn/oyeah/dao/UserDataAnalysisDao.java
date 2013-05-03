@@ -21,7 +21,7 @@ public interface UserDataAnalysisDao {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel<UserDataAnalysis> queryAllUserData(String startTime, String endTime, int pageNo, int pageSize);
+	public PageModel<UserDataAnalysis> queryAllUserData(int providerId, String productIds, String startTime, String endTime, int pageNo, int pageSize);
 	
 	/**
 	 * 查询用户充值单款游戏
@@ -31,12 +31,12 @@ public interface UserDataAnalysisDao {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel<UserDataAnalysis> querySingleUserData(String startTime, String endTime, int pageNo, int pageSize, int productId);
+	public PageModel<UserDataAnalysis> querySingleUserData(int providerId, String productIds, String startTime, String endTime, int pageNo, int pageSize, int productId);
 
 	/**
 	 * 查询所有游戏
 	 */
-	public List<Product> queryAllProduct(); 
+	public List<Product> queryAllProduct(int providerId); 
 	
 
 }

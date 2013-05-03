@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import cn.oyeah.domain.Product;
+import cn.oyeah.domain.User;
 import cn.oyeah.domain.UserDataAnalysis;
 import cn.oyeah.service.IUserDataService;
 import cn.oyeah.service.impl.UserDataServiceImpl;
@@ -75,10 +76,18 @@ public class UserDataServlet extends HttpServlet {
 	 */
 	private void queryAllUserData(HttpServletRequest request, HttpServletResponse response, int pageNo, int pageSize, String startTime, String endTime)
 	throws ServletException, IOException{
+		User loginUser = (User)request.getSession().getAttribute("user");
 		IUserDataService userDataService = new UserDataServiceImpl();
+		List<Product>  productList = userDataService.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:productList){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
 
-		PageModel<UserDataAnalysis> pageModel = userDataService.queryAllUserData(startTime, endTime, pageNo, pageSize);
-		List<Product> productList = userDataService.queryAllProduct();
+		PageModel<UserDataAnalysis> pageModel = userDataService.queryAllUserData(loginUser.getProviderID(),productIds,startTime, endTime, pageNo, pageSize);
 		request.setAttribute("pageModel", pageModel);
 		request.setAttribute("sTime", sTime);
 		request.setAttribute("eTime", eTime);
@@ -98,10 +107,18 @@ public class UserDataServlet extends HttpServlet {
 	 */
 	private void querySingleUserData(HttpServletRequest request, HttpServletResponse response, int pageNo, int pageSize, String startTime, String endTime, int productId)
 	throws ServletException, IOException{
+		User loginUser = (User)request.getSession().getAttribute("user");
 		IUserDataService userDataService = new UserDataServiceImpl();
+		List<Product>  productList = userDataService.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:productList){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
 
-		PageModel<UserDataAnalysis> pageModel = userDataService.querySingleUserData(startTime, endTime, pageNo, pageSize, productId);
-		List<Product> productList = userDataService.queryAllProduct();
+		PageModel<UserDataAnalysis> pageModel = userDataService.querySingleUserData(loginUser.getProviderID(), productIds, startTime, endTime, pageNo, pageSize, productId);
 		request.setAttribute("pageModel", pageModel);
 		request.setAttribute("sTime", sTime);
 		request.setAttribute("eTime", eTime);

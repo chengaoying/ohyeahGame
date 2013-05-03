@@ -15,14 +15,14 @@ public class UserRecordServiceImpl implements IUserRecordService {
 
 
 	public PageModel<UserSubscribeRecord> queryUserSubscribeByUserId(
-			String userId, int pageNo, int pageSize) {
-		return userRecordQueryDao.queryUserSubscribeByUserId(userId, pageNo, pageSize);
+			int providerId, String productIds,String userId, int pageNo, int pageSize) {
+		return userRecordQueryDao.queryUserSubscribeByUserId(providerId, productIds,userId, pageNo, pageSize);
 	}
 
 
-	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(String userId,
+	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(int providerId, String productIds,String userId,
 			int pageNo, int pageSize) {
-		return userRecordQueryDao.queryUserPurchaseByUserId(userId, pageNo, pageSize);
+		return userRecordQueryDao.queryUserPurchaseByUserId(providerId, productIds,userId, pageNo, pageSize);
 	}
 
 }

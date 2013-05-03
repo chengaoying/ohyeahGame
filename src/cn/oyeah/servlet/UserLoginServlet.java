@@ -42,8 +42,9 @@ public class UserLoginServlet extends HttpServlet {
 			request.getRequestDispatcher("/error.jsp").forward(request, response);
 		} else {
 			userService.updateLoginTime(name);//更改登入时间
-			request.getSession().setAttribute("authority",user.getAuthority()); 
-			request.getSession().setAttribute("name", name);
+			//request.getSession().setAttribute("authority",user.getAuthority()); 
+			//request.getSession().setAttribute("name", name);
+			request.getSession().setAttribute("user", user);
 			response.sendRedirect(request.getContextPath()+"/web/admin/main.jsp");
 	    }
 	}

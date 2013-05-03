@@ -8,7 +8,9 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
 	//System.out.println(basePath);
-	int authority = (Integer)session.getAttribute("authority");
+	//int authority = (Integer)session.getAttribute("authority");
+	User loginUser = (User)session.getAttribute("user");
+	int authority = loginUser.getAuthority();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
@@ -63,7 +65,7 @@
 		      <%
 		        if(authority > 1){
 		       %>
-		        <a href="web/admin/admin_update.jsp?id=<%=user.getId() %>&name=<%= user.getName()%>&authority=<%=user.getAuthority() %>&role=<%=user.getRole() %>"><img src="image/edit.gif" border="0"/></a>&nbsp;
+		        <a href="web/admin/admin_update.jsp?id=<%=user.getId() %>&name=<%= user.getName()%>&authority=<%=user.getAuthority() %>&role=<%=user.getRole() %>&providerId=<%=user.getProviderID()%>"><img src="image/edit.gif" border="0"/></a>&nbsp;
 					<a href="servlet/UserDeleteServlet?id=<%=user.getId() %>" onclick="javascript:return confirm('确实要删除吗?')"><img src="image/del.gif" border="0"/></a>
 			  	<% }%>   
 		    </td>

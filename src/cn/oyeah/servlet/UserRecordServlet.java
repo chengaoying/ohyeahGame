@@ -1,6 +1,7 @@
 package cn.oyeah.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,8 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
+import cn.oyeah.domain.Product;
+import cn.oyeah.domain.User;
 import cn.oyeah.domain.UserSubscribeRecord;
+import cn.oyeah.service.IUserDataService;
 import cn.oyeah.service.IUserRecordService;
+import cn.oyeah.service.impl.UserDataServiceImpl;
 import cn.oyeah.service.impl.UserRecordServiceImpl;
 import cn.oyeah.util.PageModel;
 
@@ -57,8 +62,19 @@ public class UserRecordServlet extends HttpServlet {
 	 */
 	private void querySubscribe(HttpServletRequest request, HttpServletResponse response, String userId, int pageNo, int pageSize)
 		throws ServletException, IOException {
+		User loginUser = (User)request.getSession().getAttribute("user");
+		IUserDataService userDataService = new UserDataServiceImpl();
+		List<Product>  productList = userDataService.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:productList){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
+
 		IUserRecordService userRecordService = new UserRecordServiceImpl();
-		PageModel<UserSubscribeRecord> userSubscribeModel = userRecordService.queryUserSubscribeByUserId(userId, pageNo, pageSize);
+		PageModel<UserSubscribeRecord> userSubscribeModel = userRecordService.queryUserSubscribeByUserId(loginUser.getProviderID(),productIds,userId, pageNo, pageSize);
 		request.setAttribute("userSubscribeModel", userSubscribeModel);
 		request.setAttribute("userId", userId);
 		request.getRequestDispatcher("/web/userQuery/userSubscribe.jsp").forward(request, response);
@@ -77,12 +93,22 @@ public class UserRecordServlet extends HttpServlet {
 	 */
 	private void queryPurchase(HttpServletRequest request, HttpServletResponse response, String userId, int pageNo, int pageSize)
 		throws ServletException, IOException {
-	IUserRecordService userRecordService = new UserRecordServiceImpl();
-	PageModel<UserSubscribeRecord> userPurchaseModel = userRecordService.queryUserPurchaseByUserId(userId, pageNo, pageSize);
-	request.setAttribute("userPurchaseModel", userPurchaseModel);
-	request.setAttribute("userId", userId);
-	request.getRequestDispatcher("/web/userQuery/userPurchase.jsp").forward(request, response);
+		User loginUser = (User)request.getSession().getAttribute("user");
+		IUserDataService userDataService = new UserDataServiceImpl();
+		List<Product>  productList = userDataService.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:productList){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
+		IUserRecordService userRecordService = new UserRecordServiceImpl();
+		PageModel<UserSubscribeRecord> userPurchaseModel = userRecordService.queryUserPurchaseByUserId(loginUser.getProviderID(),productIds,userId, pageNo, pageSize);
+		request.setAttribute("userPurchaseModel", userPurchaseModel);
+		request.setAttribute("userId", userId);
+		request.getRequestDispatcher("/web/userQuery/userPurchase.jsp").forward(request, response);
 	
-}
+	}
 
 }

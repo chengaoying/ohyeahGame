@@ -20,8 +20,8 @@ public class PurchasePropServiceImpl implements IPurchaseProp {
 	 * 查询所有游戏已经购买的道具
 	 * @param pageNo, pageSize
 	 */
-	public PageModel<PurchaseProp> queryAllPurchaseProp(String startTime, String endTime, int pageNo, int pageSize) {
-		return propPurchaseDao.queryAllPurchaseProp(startTime, endTime, pageNo, pageSize);
+	public PageModel<PurchaseProp> queryAllPurchaseProp(int providerId, String productIds, String startTime, String endTime, int pageNo, int pageSize) {
+		return propPurchaseDao.queryAllPurchaseProp(providerId, productIds, startTime, endTime, pageNo, pageSize);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class PurchasePropServiceImpl implements IPurchaseProp {
 	/**
 	 * 查询所有游戏产品
 	 */
-	public List<Product> queryAllProduct() {
-		return propPurchaseDao.queryAllProduct();
+	public List<Product> queryAllProduct(int providerId) {
+		return propPurchaseDao.queryAllProduct(providerId);
 	}
 }

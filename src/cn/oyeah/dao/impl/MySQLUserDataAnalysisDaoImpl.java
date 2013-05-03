@@ -16,11 +16,19 @@ import cn.oyeah.util.PageModel;
 
 public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 
-	public PageModel<UserDataAnalysis> queryAllUserData(String startTime,
+	public PageModel<UserDataAnalysis> queryAllUserData(int providerId, String productIds, String startTime,
 			String endTime, int pageNo, int pageSize) {
-		String sql = "select userId, sum(amount) as a from SubscribeRecord "
-			+" where time >= '" +startTime+"' and time <= '" + endTime
-	        +"' group by  userId order by a desc limit ?, ?";
+		String sql = "";
+		if(providerId != 1){
+			sql = "select userId, sum(amount) as a from SubscribeRecord "
+					+" where time >= '" +startTime+"' and time <= '" + endTime
+					+"' and productId in ("+productIds+")"
+			        +" group by  userId order by a desc limit ?, ?";
+		}else{
+			sql = "select userId, sum(amount) as a from SubscribeRecord "
+					+" where time >= '" +startTime+"' and time <= '" + endTime
+			        +"' group by  userId order by a desc limit ?, ?";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -45,7 +53,7 @@ public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 			pageModel.setPageSize(pageSize);
 			pageModel.setTotalPrice(totalPrice);
 			pageModel.setPageNo(pageNo);
-			pageModel.setTotalRecords(this.queryAllRecords(conn,startTime,endTime,0));
+			pageModel.setTotalRecords(this.queryAllRecords(conn,startTime,endTime,0,providerId, productIds));
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new ApplicationException("查询所有已购买的道具出现异常");
@@ -56,11 +64,19 @@ public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 		return pageModel;
 	}
 
-	public PageModel<UserDataAnalysis> querySingleUserData(String startTime,
+	public PageModel<UserDataAnalysis> querySingleUserData(int providerId, String productIds, String startTime,
 			String endTime, int pageNo, int pageSize,int productId) {
-		String sql = "select userId,productName, sum(amount) as a from SubscribeRecord "
-			+" where productId = "+productId+" and time >= '" +startTime+"' and time <= '" + endTime
-	        +"' group by  userId order by a desc limit ?, ?";
+		String sql = "";
+		if(providerId != 1){
+			sql = "select userId,productName, sum(amount) as a from SubscribeRecord "
+					+" where productId = "+productId+" and time >= '" +startTime+"' and time <= '" + endTime
+					+"' and productId in ("+productIds+")"
+			        +" group by  userId order by a desc limit ?, ?";
+		}else{
+			sql = "select userId,productName, sum(amount) as a from SubscribeRecord "
+					+" where productId = "+productId+" and time >= '" +startTime+"' and time <= '" + endTime
+			        +"' group by  userId order by a desc limit ?, ?";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -86,7 +102,7 @@ public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 			pageModel.setPageSize(pageSize);
 			pageModel.setPageNo(pageNo);
 			pageModel.setTotalPrice(totalPrice);
-			pageModel.setTotalRecords(this.queryAllRecords(conn,startTime,endTime,productId));
+			pageModel.setTotalRecords(this.queryAllRecords(conn,startTime,endTime,productId,providerId, productIds));
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new ApplicationException("查询所有已购买的道具出现异常");
@@ -97,11 +113,16 @@ public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 		return pageModel;
 	}
 	
-	private int queryAllRecords(Connection conn, String startTime, String endTime, int productId) throws SQLException{
+	private int queryAllRecords(Connection conn, String startTime, String endTime, int productId, int providerId, String productIds) throws SQLException{
 		String sql = "";
 		if(productId == 0){
-			 sql = "select count(*) ,userId from SubscribeRecord where time >='"
-				+ startTime +"' and time <='"+ endTime +"' group by userId";
+			if(providerId != 1){
+				sql = "select count(*) ,userId from SubscribeRecord where time >='"
+						+ startTime +"' and time <='"+ endTime +"' and productId in ("+productIds+") group by userId";
+			}else{
+				 sql = "select count(*) ,userId from SubscribeRecord where time >='"
+							+ startTime +"' and time <='"+ endTime +"' group by userId";
+			}
 		} else {
 			sql =  "select count(*) ,userId from SubscribeRecord where productId="+ productId +" and time >='"
 				+ startTime +"' and time <='"+ endTime +"' group by userId";
@@ -124,8 +145,13 @@ public class MySQLUserDataAnalysisDaoImpl implements UserDataAnalysisDao {
 		return records;
 	}
 
-	public List<Product> queryAllProduct() {
-		String sql = "select * from Product";
+	public List<Product> queryAllProduct(int providerId) {
+		String sql = "";
+		if(providerId==1){
+			 sql = "select * from Product";
+		}else{
+			 sql = "select * from Product where providerId = "+providerId;
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -9,6 +9,7 @@ int id = Integer.parseInt(request.getParameter("id"));
 String name = request.getParameter("name");
 int authority = Integer.parseInt(request.getParameter("authority"));
 String role = new String (request.getParameter("role").getBytes("iso-8859-1"),"utf-8");
+int providerId = Integer.parseInt(request.getParameter("providerId"));
 //System.out.println("name:" + name);
 //System.out.println("authority:" + authority);
 //System.out.println("role:"+role);
@@ -44,12 +45,16 @@ String role = new String (request.getParameter("role").getBytes("iso-8859-1"),"u
 			field.password2.focus();
 			return (false);
 			}
-	
-		if (field.authority.value=="请给权限值") {
-			window.alert("请给权限值");
-			field.authority.focus();		
+		if (field.providerId.value=="请选择产品提供者") {
+			window.alert("请选择产品提供者");
+			field.providerId.focus();		
 			 return (false);
-			}
+		}
+		if (field.role.value=="请分配角色") {
+			window.alert("请分配角色");
+			field.role.focus();		
+			 return (false);
+		}
 	}	
 </script>	
 </head>
@@ -64,6 +69,26 @@ String role = new String (request.getParameter("role").getBytes("iso-8859-1"),"u
 	       <td height="24" align="left" bgcolor="#f8f8f8" valign="middle" width="87%">
 	       <input name="id" value="<%=id %>" type="hidden" />
 	       <input name="name" id="name" size="20" value="<%=name %>" type="text"></td>
+    </tr>
+    <tr>
+      <td height="24" align="right" bgcolor="#f8f8f8" valign="middle" width="13%">产品提供者:</td>
+      <td height="24" align="left" bgcolor="#f8f8f8" valign="middle" width="87%">
+           <select id="providerId" name="providerId">
+	            <option value="请选择产品提供者" selected="selected">请选择产品提供者</option>
+	             <%
+	               List<ProductProvider> providers = DataDictionaryManager.getInstance().getAllProductProvider();
+	               for(Iterator<ProductProvider> it = providers.iterator(); it.hasNext();){
+	            	   ProductProvider pp = it.next();	 
+	            	   String selectedStr= "";
+	            	   if(providerId == pp.getProviderID()){
+	            		   selectedStr = "selected";
+	            	   }
+	            %>
+	            <option value="<%=pp.getProviderID() %>"<%=selectedStr %>><%=pp.getProviderName() %></option>
+	            <%} %>
+	            
+	         </select>
+      </td>
     </tr>
 	     <tr>
       <td height="24" align="right" bgcolor="#f8f8f8" valign="middle" width="13%">角色:</td>

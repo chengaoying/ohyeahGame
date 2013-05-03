@@ -6,7 +6,10 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-	int authority = (Integer)session.getAttribute("authority"); 
+	//int authority = (Integer)session.getAttribute("authority");
+	User loginUser = (User)session.getAttribute("user");
+	int authority = loginUser.getAuthority();
+	int providerId = loginUser.getProviderID();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
@@ -110,7 +113,9 @@ eval("submenu" + sid + ".style.display=\"none\";");
                           <td class="sub_table_td" align="center" height="26" width="80"></td>
                           <td class="sub_table_td" align="left" height="26" valign="middle"><a href="servlet/PropPurchaseServlet?command=all&pageNo=1" target="mainFrame">道具购买统计</a></td>
                         </tr> 
-                
+                 <%
+                      if(providerId == 1){
+                     %>
                         <tr>
                           <td class="sub_table_td" align="center" height="26" width="80"></td>
                           <td class="sub_table_td" align="left" height="26" valign="middle"><a href="servlet/RealTimeStatisticServlet" target="mainFrame">实时统计</a></td>
@@ -119,6 +124,13 @@ eval("submenu" + sid + ".style.display=\"none\";");
                           <td class="sub_table_td" align="center" height="26" width="80"></td>
                           <td class="sub_table_td" align="left" height="26" valign="middle"><a href="servlet/SubscribeStatisticServlet?pageNo=1&command=all" target="mainFrame">充值用户统计</a></td>
                         </tr>
+                         <tr>
+                          <td class="sub_table_td" align="center" height="26" width="80"></td>
+                          <td class="sub_table_td" align="left" height="26" valign="middle"><a href="servlet/queryCoin" target="mainFrame">用户余额查询</a></td>
+                        </tr>
+                         <%
+                      }
+                     %>
             		  <tr>
                           <td class="sub_table_td" align="center" height="26" width="80"></td>
                           <td class="sub_table_td" align="left" height="26" valign="middle"><a href="web/userQuery/index.jsp" target="mainFrame">用户记录查询</a></td>
@@ -128,6 +140,7 @@ eval("submenu" + sid + ".style.display=\"none\";");
                           <td class="sub_table_td" align="center" height="26" width="80"></td>
                           <td class="sub_table_td" align="left" height="26" valign="middle"><a href="servlet/UserDataServlet?pageNo=1&command=all" target="mainFrame">用户数据分析</a></td>
                         </tr>
+                     
                       </tbody>
                       <tbody>
                       </tbody>

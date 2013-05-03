@@ -24,9 +24,15 @@ public class MySQLRechargeDaoImpl implements RechargeDao {
 	 * @param endTime
 	 * @return Map
 	 */
-	public Map<String,Integer> getSubscribeDetail(String startTime, String endTime){
-		String sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
-        startTime +"') and (time <='" + endTime + "') group by date(time), productId order by date(time) desc";
+	public Map<String,Integer> getSubscribeDetail(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
+			        startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by date(time), productId order by date(time) desc";
+		}else{
+			sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
+			        startTime +"') and (time <='" + endTime + "') group by date(time), productId order by date(time) desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -55,9 +61,15 @@ public class MySQLRechargeDaoImpl implements RechargeDao {
 	 * @param endTime
 	 * @return Map
 	 */
-	public Map<String,Integer> getAllSubscribeDetail(String startTime, String endTime){
-		String sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
-        startTime +"') and (time <='" + endTime + "') group by date(time), productId order by date(time) desc";
+	public Map<String,Integer> getAllSubscribeDetail(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			 sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
+				        startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by date(time), productId order by date(time) desc";
+		}else{
+			 sql = "select date(time) as t, productId, sum(amount) as sum from SubscribeRecord where (time >= '"+
+				        startTime +"') and (time <='" + endTime + "') group by date(time), productId order by date(time) desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -90,9 +102,15 @@ public class MySQLRechargeDaoImpl implements RechargeDao {
 	 * @param endTime
 	 * @throws ParseException 
 	 */
-	public List<String> getTableRows(String startTime, String endTime) {
-		String sql = "select date(time) as t from SubscribeRecord where (time >= '"+
-        			  startTime +"') and (time <='" + endTime + "') group by date(time) order by date(time) desc";
+	public List<String> getTableRows(int providerId, String productIds,String startTime, String endTime) {
+		String sql = "";
+		if(providerId != 1){
+			sql = "select date(time) as t from SubscribeRecord where (time >= '"+
+      			  startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by date(time) order by date(time) desc";
+		}else{
+			sql = "select date(time) as t from SubscribeRecord where (time >= '"+
+      			  startTime +"') and (time <='" + endTime + "') group by date(time) order by date(time) desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -120,9 +138,15 @@ public class MySQLRechargeDaoImpl implements RechargeDao {
 	 * @param endTime
 	 * @return 
 	 */
-	public Map<String,String> getTableColumns(String startTime, String endTime){
-		String sql = "select distinct productId, productName from SubscribeRecord where (time >= '"+
-						startTime +"') and (time <='" + endTime + "') order by productId desc";
+	public Map<String,String> getTableColumns(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			sql = "select distinct productId, productName from SubscribeRecord where (time >= '"+
+					startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") order by productId desc";
+		}else{
+			sql = "select distinct productId, productName from SubscribeRecord where (time >= '"+
+					startTime +"') and (time <='" + endTime + "') order by productId desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -18,14 +18,20 @@ import cn.oyeah.util.ApplicationException;
 
 public class SQLServerRechargeDaoImpl implements RechargeDao {
 	/**
-	 * 鑾峰彇璇ユ椂闂存鍐呭崟娆炬父鎴忓綋澶╃殑鍏呭�鎬婚
+	 * 获取该时间段内单款游戏当天的充值总额
 	 * @param startTime
 	 * @param endTime
 	 * @return Map
 	 */
-	public Map<String,Integer> getSubscribeDetail(String startTime, String endTime){
-		String sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"
-			+ startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23), productId order by CONVERT(varchar(100), time, 23) desc";
+	public Map<String,Integer> getSubscribeDetail(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"
+					+ startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by CONVERT(varchar(100), time, 23), productId order by CONVERT(varchar(100), time, 23) desc";
+		}else{
+			sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"
+					+ startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23), productId order by CONVERT(varchar(100), time, 23) desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -42,7 +48,7 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException("鑾峰彇璇ユ椂闂存鍐呮墍鏈夋父鎴忕殑鍏呭�鎬婚澶辫触");
+			throw new ApplicationException("获取该时间段内单款游戏当天的充值总额失败");
 		}finally {
 			ConnectionManager.close(rs);
 			ConnectionManager.close(pstmt);
@@ -52,14 +58,20 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 	
 
 	/**
-	 * 鑾峰彇璇ユ椂闂存鍐呭崟娆炬父鎴忓厖鍊兼�棰�
+	 *  获取该时间段内单款游戏充值总额
 	 * @param startTime
 	 * @param endTime
 	 * @return Map
 	 */
-	public Map<String,Integer> getAllSubscribeDetail(String startTime, String endTime){
-		String sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"+
-        startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23), productId order by t desc";
+	public Map<String,Integer> getAllSubscribeDetail(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"+
+			        startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by CONVERT(varchar(100), time, 23), productId order by t desc";
+		}else{
+			sql = "select CONVERT(varchar(100), time, 23) as t, productId, sum(amount) as sum from [SubscribeRecord] where (time >= '"+
+			        startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23), productId order by t desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -80,7 +92,7 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException("");
+			throw new ApplicationException("获取该时间段内所有游戏的充值总额失败");
 		}finally {
 			ConnectionManager.close(rs);
 			ConnectionManager.close(pstmt);
@@ -89,14 +101,20 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 	}
 	
 	/**
-	 * 鑾峰緱璇ユ椂闂存鍐呯殑琛屾暟
+	 * 获得该时间段内的行数
 	 * @param startTime
 	 * @param endTime
 	 * @throws ParseException 
 	 */
-	public List<String> getTableRows(String startTime, String endTime) {
-		String sql = "select CONVERT(varchar(100), time, 23) as t from [SubscribeRecord] where (time >= '"+
-        			  startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23) order by t desc";
+	public List<String> getTableRows(int providerId, String productIds,String startTime, String endTime) {
+		String sql = "";
+		if(providerId != 1){
+			sql = "select CONVERT(varchar(100), time, 23) as t from [SubscribeRecord] where (time >= '"+
+      			  startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") group by CONVERT(varchar(100), time, 23) order by t desc";
+		}else{
+			sql = "select CONVERT(varchar(100), time, 23) as t from [SubscribeRecord] where (time >= '"+
+      			  startTime +"') and (time <='" + endTime + "') group by CONVERT(varchar(100), time, 23) order by t desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -110,7 +128,7 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException("鑾峰緱璇ユ椂闂存鍐呯殑琛屾暟澶辫触");
+			throw new ApplicationException("获得该时间段内的行数失败");
 		}finally {
 			ConnectionManager.close(rs);
 			ConnectionManager.close(pstmt);
@@ -119,14 +137,20 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 	} 
 	
 	/**
-	 * 鑾峰彇宸茬粡鍏呭�鐨勬父鎴�
+	 * 获取已经充值的游戏
 	 * @param startTime
 	 * @param endTime
 	 * @return 
 	 */
-	public Map<String,String> getTableColumns(String startTime, String endTime){
-		String sql = "select distinct productId from [SubscribeRecord] where (time >= '"+
-						startTime +"') and (time <='" + endTime + "') order by productId desc";
+	public Map<String,String> getTableColumns(int providerId, String productIds,String startTime, String endTime){
+		String sql = "";
+		if(providerId != 1){
+			sql = "select distinct productId from [SubscribeRecord] where (time >= '"+
+					startTime +"') and (time <='" + endTime + "') and productId in ("+productIds+") order by productId desc";
+		}else{
+			sql = "select distinct productId from [SubscribeRecord] where (time >= '"+
+					startTime +"') and (time <='" + endTime + "') order by productId desc";
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -143,7 +167,7 @@ public class SQLServerRechargeDaoImpl implements RechargeDao {
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException("鑾峰緱璇ユ椂闂存鍐呯殑鍒楁暟澶辫触");
+			throw new ApplicationException("获得该时间段内的列数失败");
 		}finally {
 			ConnectionManager.close(rs);
 			ConnectionManager.close(pstmt);

@@ -9,7 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.oyeah.domain.Product;
+import cn.oyeah.domain.User;
+import cn.oyeah.service.IPurchaseProp;
 import cn.oyeah.service.IRechargeGame;
+import cn.oyeah.service.impl.PurchasePropServiceImpl;
 import cn.oyeah.service.impl.RechargeGameServiceImpl;
 import cn.oyeah.util.DateTimeUtils;
 
@@ -50,11 +54,22 @@ public class RechargeGameServlet extends HttpServlet{
 			endTime = request.getParameter("endTime") + " 23:59:59"; 
 		}
 		
+		User loginUser = (User)request.getSession().getAttribute("user");
+		IPurchaseProp purchasePropSer = new PurchasePropServiceImpl();
+		List<Product>  products = purchasePropSer.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:products){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
+		
 		IRechargeGame rechargeSer = new RechargeGameServiceImpl();
-		Map<String,Integer> subscribeMap = rechargeSer.getSubscribeDetail(startTime, endTime);
-		Map<String,Integer> allSubscribeMap = rechargeSer.getAllSubscribeDetail(startTime, endTime);
-		List<String> timeList = rechargeSer.getTableRows(startTime, endTime);
-		Map<String,String> productList = rechargeSer.getTableColumns(startTime, endTime);
+		Map<String,Integer> subscribeMap = rechargeSer.getSubscribeDetail(loginUser.getProviderID(),productIds,startTime, endTime);
+		Map<String,Integer> allSubscribeMap = rechargeSer.getAllSubscribeDetail(loginUser.getProviderID(),productIds,startTime, endTime);
+		List<String> timeList = rechargeSer.getTableRows(loginUser.getProviderID(),productIds,startTime, endTime);
+		Map<String,String> productList = rechargeSer.getTableColumns(loginUser.getProviderID(),productIds,startTime, endTime);
 		request.setAttribute("subscribeMap", subscribeMap);
 		request.setAttribute("allSubscribeMap",allSubscribeMap);
 		request.setAttribute("timeList", timeList);//页面的行

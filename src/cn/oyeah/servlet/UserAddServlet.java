@@ -32,6 +32,7 @@ public class UserAddServlet extends HttpServlet {
 		user.setName(request.getParameter("name"));
 		user.setPassWord(request.getParameter("password"));
 		user.setRole(request.getParameter("role"));
+		user.setProviderID(Integer.parseInt(request.getParameter("providerId")));
 		String role = (String)request.getParameter("role");
 		if(role.equalsIgnoreCase("admin")){
 			user.setAuthority(3);

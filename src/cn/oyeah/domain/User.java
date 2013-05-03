@@ -19,12 +19,21 @@ public class User {
 	//管理员权限值
 	private int authority;
 	
+	//产品提供者id
+	private int providerID;
+	
 	//创建的时间
 	private Date createTime;
 	
 	//最后登入时间
 	private Date loginTime;
 	
+	public int getProviderID() {
+		return providerID;
+	}
+	public void setProviderID(int providerID) {
+		this.providerID = providerID;
+	}
 	public int getId() {
 		return id;
 	}

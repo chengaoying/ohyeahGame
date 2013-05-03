@@ -20,10 +20,19 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * 查询所有已购买的道具并分页
 	 * @param pageNo, pageSize
 	 */
-	public PageModel<PurchaseProp> queryAllPurchaseProp(String startTime, String endTime, int pageNo, int pageSize) {
-		String sql = "select date(time) as t,productId, productName, propId, propName, sum(propCount) as pCount,amount from PurchaseRecord "
+	public PageModel<PurchaseProp> queryAllPurchaseProp(int providerId,String productIds, String startTime, String endTime, int pageNo, int pageSize) {
+		String sql = "";
+		if(providerId!=1){
+			sql = "select date(time) as t,productId, productName, propId, propName, sum(propCount) as pCount,amount from PurchaseRecord "
+					+" where time >= '" +startTime+"' and time <= '" + endTime
+					+"' and productId in("+productIds+")"
+			        +" group by  propId order by sum(propCount) desc limit ?, ?";
+		}else{
+			sql = "select date(time) as t,productId, productName, propId, propName, sum(propCount) as pCount,amount from PurchaseRecord "
 					+" where time >= '" +startTime+"' and time <= '" + endTime
 			        +"' group by  propId order by sum(propCount) desc limit ?, ?";
+		}
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -48,9 +57,9 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 			}
 			pageModel = new PageModel<PurchaseProp>();
 			pageModel.setList(propList);
-			pageModel.setTotalRecords(this.getAllTotalRecords(conn,0, startTime, endTime));
+			pageModel.setTotalRecords(this.getAllTotalRecords(conn,0, startTime, endTime, providerId, productIds));
 			//System.out.println(this.getAllTotalRecords(conn,0, startTime, endTime));
-			pageModel.setTotalPrice(this.queryTotalPrice(conn, 0, startTime, endTime));
+			pageModel.setTotalPrice(this.queryTotalPrice(conn, 0, startTime, endTime, providerId, productIds));
 			//System.out.println(this.queryTotalPrice(conn, 0, startTime, endTime));
 			pageModel.setPageSize(pageSize);
 			pageModel.setPageNo(pageNo);
@@ -97,8 +106,8 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 				}
 				pageModel = new PageModel<PurchaseProp>();
 				pageModel.setList(propList);
-				pageModel.setTotalRecords(this.getAllTotalRecords(conn,productId, startTime, endTime));
-				pageModel.setTotalPrice(this.queryTotalPrice(conn, productId, startTime, endTime));
+				pageModel.setTotalRecords(this.getAllTotalRecords(conn,productId, startTime, endTime,-1,null));
+				pageModel.setTotalPrice(this.queryTotalPrice(conn, productId, startTime, endTime,-1,null));
 				pageModel.setPageSize(pageSize);
 				pageModel.setPageNo(pageNo);
 			}catch(SQLException e) {
@@ -115,8 +124,13 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * 查询所有的游戏产品
 	 * @return List
 	 */
-	public List<Product> queryAllProduct(){
-		String sql = "select * from Product";
+	public List<Product> queryAllProduct(int providerId){
+		String sql = "";
+		if(providerId==1){
+			 sql = "select * from Product";
+		}else{
+			 sql = "select * from Product where providerId = "+providerId;
+		}
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -152,13 +166,20 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * @param conn,productId,startTime,endTime
 	 * @return
 	 */
-	private int getAllTotalRecords(Connection conn,int productId, String startTime, String endTime) 
+	private int getAllTotalRecords(Connection conn,int productId, String startTime, String endTime, int providerId, String productIds) 
 	throws SQLException {
 		String sql = "";
 		if(productId == 0){
-				 sql = "select date(time) as t,propId, sum(propCount) from PurchaseRecord " 
-					+" where date(time) >= '" +startTime+"' and date(time) <= '" + endTime 
-					+ "' group by propId  order by sum(propCount) desc";
+			if(providerId!=1){
+				sql = "select date(time) as t,propId, sum(propCount) from PurchaseRecord " 
+						+" where date(time) >= '" +startTime+"' and date(time) <= '" + endTime 
+						+"'  and productId in ("+productIds+")"
+						+ " group by propId  order by sum(propCount) desc";
+			}else{
+				sql = "select date(time) as t,propId, sum(propCount) from PurchaseRecord " 
+						+" where date(time) >= '" +startTime+"' and date(time) <= '" + endTime 
+						+ "' group by propId  order by sum(propCount) desc";
+			}
 				       
 		} else {
 			    sql = "select date(time) as t,productId,propId, sum(propCount) from PurchaseRecord where productId= "+ productId 
@@ -187,14 +208,21 @@ public class MySQLPropPurchaseDaoImpl implements PropPurchaseDao {
 	 * @return
 	 * @throws SQLException 
 	 */
-	private long queryTotalPrice(Connection conn, int productId, String startTime, String endTime) 
+	private long queryTotalPrice(Connection conn, int productId, String startTime, String endTime, int providerId, String productIds) 
 	throws SQLException{
 		long totalPrice = 0;
 		String sql = "";
 		if (productId == 0){
-			 sql = "select date(time) as t,propId, sum(propCount) as pCount, amount from PurchaseRecord "
-				 +" where time >= '" +startTime+"' and time <= '" + endTime
-				 + "' group by propId,amount order by sum(propCount) desc";
+			if(providerId!=1){
+				 sql = "select date(time) as t,propId, sum(propCount) as pCount, amount from PurchaseRecord "
+						 +" where time >= '" +startTime+"' and time <= '" + endTime
+						 +"' and productId in ("+productIds+")"
+						 + " group by propId,amount order by sum(propCount) desc";
+			}else{ 
+				sql = "select date(time) as t,propId, sum(propCount) as pCount, amount from PurchaseRecord "
+					 +" where time >= '" +startTime+"' and time <= '" + endTime
+					 + "' group by propId,amount order by sum(propCount) desc";
+			}
 		} else {
 			 sql = "select date(time) as t,productId,propId, sum(propCount) as pCount, amount from PurchaseRecord where productId = " + productId
 			 +" and time >= '" +startTime+"' and time <= '" + endTime 

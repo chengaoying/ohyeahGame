@@ -16,13 +16,16 @@ import cn.oyeah.util.PageModel;
 public class SQLServerUserRecordQueryDaoImpl implements UserRecordQueryDao {
 
 	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(
-			String userId, int pageNo, int pageSize) {
+			int providerId, String productIds,String userId, int pageNo, int pageSize) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select top "+pageSize+" *");
 		sql.append(" from ( ");
 		sql.append("     select row_number()over(order by time desc) as rowNumber ,time,amount, propName ");
-		sql.append("     from [PurchaseRecord] where userId='"+userId);
-		sql.append("'  ) tb2");
+		sql.append("     from [PurchaseRecord] where userId='"+userId+"'");
+		if(providerId != 1){
+			sql.append(" and productId in ("+productIds+")");
+		}
+		sql.append("  ) tb2");
 		sql.append(" where  rowNumber > "+pageSize+" * ("+pageNo+"-1)");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -62,13 +65,16 @@ public class SQLServerUserRecordQueryDaoImpl implements UserRecordQueryDao {
 	}
 
 	public PageModel<UserSubscribeRecord> queryUserSubscribeByUserId(
-			String userId, int pageNo, int pageSize) {
+			int providerId, String productIds,String userId, int pageNo, int pageSize) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select top "+pageSize+" *");
 		sql.append(" from ( ");
 		sql.append("     select row_number()over(order by time desc) as rowNumber ,time,amount, productName");
-		sql.append("     from [SubscribeRecord] where userId='"+userId);
-		sql.append("'  ) tb2");
+		sql.append("     from [SubscribeRecord] where userId='"+userId+"'");
+		if(providerId != 1){
+			sql.append(" and productId in ("+productIds+")");
+		}
+		sql.append("  ) tb2");
 		sql.append(" where  rowNumber > "+pageSize+" * ("+pageNo+"-1)");
 		Connection conn = null;
 		PreparedStatement pstmt = null;

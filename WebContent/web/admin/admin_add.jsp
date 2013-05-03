@@ -37,12 +37,16 @@
 			alert("密码不一致,请重新输入!");
 			field.password2.focus();
 		}
+		if (field.providerId.value=="请选择产品提供者") {
+			window.alert("请选择产品提供者");
+			field.role.focus();		
+			 return (false);
+		}
 		if (field.role.value=="请分配角色") {
 			window.alert("请分配角色");
 			field.role.focus();		
 			 return (false);
-			}
-	
+		}
 	}	
 	
 	var xmlHttp;
@@ -119,6 +123,22 @@
     <tr>
       <td height="24" align="right" bgcolor="#f8f8f8" valign="middle" width="13%">重复密码:</td>
       <td height="24" align="left" bgcolor="#f8f8f8" valign="middle" width="87%"><input name="password2" id="password2" size="15" value="" type="password" /></td>
+    </tr>
+    <tr>
+      <td height="24" align="right" bgcolor="#f8f8f8" valign="middle" width="13%">产品提供者:</td>
+      <td height="24" align="left" bgcolor="#f8f8f8" valign="middle" width="87%">
+           <select id="providerId" name="providerId">
+	            <option value="请选择产品提供者" selected="selected">请选择产品提供者</option>
+	             <%
+	               List<ProductProvider> providers = DataDictionaryManager.getInstance().getAllProductProvider();
+	               for(Iterator<ProductProvider> it = providers.iterator(); it.hasNext();){
+	            	   ProductProvider pp = it.next();	            		   
+	            %>
+	            <option value="<%=pp.getProviderID() %>"><%=pp.getProviderName() %></option>
+	            <%} %>
+	            
+	         </select>
+      </td>
     </tr>
     <tr>
       <td height="24" align="right" bgcolor="#f8f8f8" valign="middle" width="13%">角色:</td>

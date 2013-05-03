@@ -1,6 +1,9 @@
 package cn.oyeah.service;
 
 
+import java.util.List;
+import java.util.Map;
+
 import cn.oyeah.domain.User;
 import cn.oyeah.util.PageModel;
 
@@ -42,5 +45,17 @@ public interface IUserService {
 	 * @param u
 	 */
 	public void updateUser(User u);
+	
+	/**
+	 * 查寻用户余额
+	 * @return
+	 */
+	public Map<String, Integer> queryCoin();
+	
+	public List<String> getTableRows();
+	
+	public Map<String, String> getTableColumns();
+	
+	public int queryAllAmount();
 
 }

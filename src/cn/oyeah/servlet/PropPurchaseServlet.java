@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.oyeah.domain.Product;
 import cn.oyeah.domain.PurchaseProp;
+import cn.oyeah.domain.User;
 import cn.oyeah.service.IPurchaseProp;
 import cn.oyeah.service.impl.PurchasePropServiceImpl;
 import cn.oyeah.util.DateTimeUtils;
@@ -79,10 +80,17 @@ public class PropPurchaseServlet extends HttpServlet {
 	 */
 	private void queryAllProp(HttpServletRequest request, HttpServletResponse response, int pageNo, int pageSize)
 	throws ServletException, IOException {
-		
+		User loginUser = (User)request.getSession().getAttribute("user");
 		IPurchaseProp purchasePropSer = new PurchasePropServiceImpl();
-		PageModel<PurchaseProp> pageModel = purchasePropSer.queryAllPurchaseProp(startTime, endTime, pageNo, pageSize);
-		List<Product>  productList = purchasePropSer.queryAllProduct();
+		List<Product>  productList = purchasePropSer.queryAllProduct(loginUser.getProviderID());
+		String productIds = "";
+		if(loginUser.getProviderID()!=1){
+			for(Product p:productList){
+				productIds += p.getProductId()+",";
+			}
+			productIds = productIds.substring(0, productIds.length()-1);
+		}
+		PageModel<PurchaseProp> pageModel = purchasePropSer.queryAllPurchaseProp(loginUser.getProviderID(),productIds,startTime, endTime, pageNo, pageSize);
 		request.setAttribute("productList", productList);
 		request.setAttribute("pageModel", pageModel);
 		//System.out.println(pageModel.getList().size());
@@ -98,10 +106,10 @@ public class PropPurchaseServlet extends HttpServlet {
 	 */
 	private void querySingleProp(HttpServletRequest request, HttpServletResponse response, int pageNo, int pageSize, int productId)
 	throws ServletException, IOException {
-		
+		User loginUser = (User)request.getSession().getAttribute("user");
 		IPurchaseProp purchasePropSer = new PurchasePropServiceImpl();
 		PageModel<PurchaseProp> pageModel2 = purchasePropSer.queryPurchaseProp(startTime, endTime, productId, pageNo, pageSize);
-		List<Product>  productList2 = purchasePropSer.queryAllProduct();
+		List<Product>  productList2 = purchasePropSer.queryAllProduct(loginUser.getProviderID());
 		request.setAttribute("productList2", productList2);
 		request.setAttribute("pageModel2", pageModel2); 
 		//System.out.println("productList2>>"+productList2);

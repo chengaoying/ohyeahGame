@@ -24,7 +24,6 @@ public class UserDeleteServlet extends HttpServlet {
 		this.doPost(request, response);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

@@ -12,7 +12,7 @@ public interface IUserRecordService {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel<UserSubscribeRecord> queryUserSubscribeByUserId(String userId, int pageNo, int pageSize);
+	public PageModel<UserSubscribeRecord> queryUserSubscribeByUserId(int providerId, String productIds,String userId, int pageNo, int pageSize);
 	/**
 	 * 通过userId查询用户道具购买记录
 	 * @param userId
@@ -20,7 +20,7 @@ public interface IUserRecordService {
 	 * @param pageSize
 	 * @return
 	 */
-	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(String userId, int pageNo, int pageSize);
+	public PageModel<UserSubscribeRecord> queryUserPurchaseByUserId(int providerId, String productIds,String userId, int pageNo, int pageSize);
 
 
 }

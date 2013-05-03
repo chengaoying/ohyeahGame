@@ -16,7 +16,7 @@ public interface PropPurchaseDao {
 	 * 根据查询所有已购买的道具按时间排序
 	 * @param 
 	 */
-	public PageModel<PurchaseProp> queryAllPurchaseProp(String startTime, String endTime, int pageNo, int pageSize);
+	public PageModel<PurchaseProp> queryAllPurchaseProp(int providerId, String productIds, String startTime, String endTime, int pageNo, int pageSize);
 	/**
 	 * 根据游戏ID查询已购买的道具
 	 * @param gameName
@@ -26,6 +26,6 @@ public interface PropPurchaseDao {
 	/**
 	 * 查询所有游戏
 	 */
-	public List<Product> queryAllProduct();
+	public List<Product> queryAllProduct(int providerId);
 
 }
