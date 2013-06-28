@@ -28,7 +28,7 @@
 
 <table style="margin: 0pt auto; padding-top: 10px;"  bgcolor="#cccccc" border="0" cellpadding="3" cellspacing="1" width="98%">
   <tbody><tr bgcolor="#879999">
-    <td colspan="9" height="24"><font color="#FFFFFF">&nbsp;<strong>游戏充值统计</strong></font></td>
+    <td colspan="9" height="24"><font color="#FFFFFF">&nbsp;<strong>游戏充值统计（注意：统计后台正在升级，由于上海电信统一货币，充值统计截至2013年6月20号消费单位为元，21号之后消费的单位为TV币。1元=10TV币）</strong></font></td>
   </tr>
   
 	 <tr bgcolor="#879999">
